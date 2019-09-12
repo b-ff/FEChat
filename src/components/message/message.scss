@@ -1,0 +1,15 @@
+.message {
+    margin: 1rem;
+    font-size: 1rem;
+
+    &__sender {
+        font-size: .5rem;
+        padding-bottom: .25rem;
+    }
+
+    &__date {
+        color: #aaa;
+    }
+
+    &__text {}
+}
