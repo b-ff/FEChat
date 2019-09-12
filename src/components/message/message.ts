@@ -3,14 +3,11 @@ const template = require('./message.pug')()
 
 import Message from '../../models/Message'
 
-const QUOTE = '&quot;'
-
 export default class MessageComponent extends HTMLElement {
     public message: Message
 
     constructor () {
         super()
-        this.classList.add('message')
     }
 
     get template (): string {
@@ -46,6 +43,7 @@ export default class MessageComponent extends HTMLElement {
     }
 
     connectedCallback (): void {
+        this.classList.add('message')
         this.render()
     }
 

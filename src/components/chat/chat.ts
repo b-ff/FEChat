@@ -6,8 +6,6 @@ import Message from '../../models/Message'
 
 import messagesService from '../../services/messagesService'
 
-const QUOTE = '&quot;'
-
 const MESSAGES_CONTAINER_CLASS = '.chat__messages'
 const NICKNAME_INPUT_CLASS = '.chat__input--name'
 const MESSAGE_INPUT_CLASS = '.chat__input--message'
@@ -23,8 +21,6 @@ export default class ChatComponent extends HTMLElement {
 
     constructor () {
         super()
-        this.classList.add('chat')
-        this.client = Client.build({})
     }
 
     get template (): string { 
@@ -58,6 +54,8 @@ export default class ChatComponent extends HTMLElement {
     }
 
     connectedCallback (): void {
+        this.classList.add('chat')
+        this.client = Client.build({})
         this.render()
         this.addEventListeners()
         this.startPolling()
