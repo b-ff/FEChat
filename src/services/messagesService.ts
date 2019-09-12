@@ -1,5 +1,4 @@
 import Message from '../models/Message';
-import { executionAsyncId } from 'async_hooks';
 
 const MESSAGES_STORAGE_KEY = 'fechat-messages'
 
@@ -11,7 +10,7 @@ class MessagesService {
     }
 
     getMessages (): Message[] {
-        console.log('Receiving messages!')
+        console.log('Receiving messages!') // eslint-disable-line
         this.messages = JSON.parse(window.localStorage.getItem(MESSAGES_STORAGE_KEY)) || []
         return this.messages
     }
@@ -23,7 +22,7 @@ class MessagesService {
     }
 
     postMessages (): void {
-        console.log('Posting messages!')
+        console.log('Posting messages!') // eslint-disable-line
         window.localStorage.setItem(MESSAGES_STORAGE_KEY, JSON.stringify(this.messages))
     }
 

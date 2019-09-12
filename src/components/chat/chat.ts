@@ -5,7 +5,6 @@ import Client from '../../models/Client'
 import Message from '../../models/Message'
 
 import messagesService from '../../services/messagesService'
-import { thisExpression } from 'babel-types';
 
 const QUOTE = '&quot;'
 
@@ -18,14 +17,14 @@ const ENTER_KEYCODE = 13
 const POLLING_INTERVAL = 5000
 
 export default class ChatComponent extends HTMLElement {
-    public clientId: string
-    public messages: Message[] = []
-    public pollingTimeoutID: number
+    private client: Client
+    private messages: Message[] = []
+    private pollingTimeoutID: number
 
     constructor () {
         super()
         this.classList.add('chat')
-        this.clientId = Client.build({}).clientId
+        this.client = Client.build({})
     }
 
     get template (): string { 
@@ -40,8 +39,7 @@ export default class ChatComponent extends HTMLElement {
     renderMessages (): void {
         this.querySelector(MESSAGES_CONTAINER_CLASS).innerHTML =
             this.messages
-                .map((message: Message): string => JSON.stringify(message))
-                .map((message: string): string => `<message-component message='${message}'>${message}</message-component>`)
+                .map((message: Message): string => `<message-component message='${JSON.stringify(message)}'></message-component>`)
                 .join('')
     }
 
@@ -56,9 +54,7 @@ export default class ChatComponent extends HTMLElement {
         const messagesList = this.querySelector(MESSAGES_CONTAINER_CLASS)
         messagesList.scrollTop = messagesList.scrollHeight
 
-        this.pollingTimeoutID = window.setTimeout((): void => {
-            this.startPolling()
-        }, POLLING_INTERVAL)
+        this.pollingTimeoutID = window.setTimeout((): void => this.startPolling(), POLLING_INTERVAL)
     }
 
     connectedCallback (): void {
@@ -86,15 +82,9 @@ export default class ChatComponent extends HTMLElement {
     }
 
     sendMessage (messageText: string): void {
-        const message = new Message(
-            this.clientId,
-            messageText,
-            new Date()
-        )
+        const message = new Message(this.client.clientId, messageText, new Date())
         messagesService.sendMessage(message)
         this.startPolling()
-        this.renderMessages()
-        
     }
 }
 
