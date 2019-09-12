@@ -5,9 +5,7 @@ const MESSAGES_STORAGE_KEY = 'fechat-messages'
 class MessagesService {
     public messages: Message[] = []
 
-    constructor () {
-        this.getMessages()
-    }
+    constructor () {}
 
     getMessages (): Message[] {
         console.log('Receiving messages!') // eslint-disable-line
