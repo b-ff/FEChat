@@ -1,5 +1,5 @@
-.message__sender 
-    | {{senderId}}
+.message__sender(data-sender-id="{{ senderId }}")
+    | {{ sender }}
     | &nbsp;
-    span.message__date ({{date}})
-.message__text {{text}}
+    span.message__date {{ date }}
+.message__text {{ text }}

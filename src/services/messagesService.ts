@@ -3,26 +3,22 @@ import Message from '../models/Message';
 const MESSAGES_STORAGE_KEY = 'fechat-messages'
 
 class MessagesService {
-    public messages: Message[] = []
+    private messages: Message[] = []
 
-    constructor () {
-
-    }
+    constructor () {}
 
     getMessages (): Message[] {
-        console.log('Receiving messages!') // eslint-disable-line
         this.messages = (JSON.parse(window.localStorage.getItem(MESSAGES_STORAGE_KEY)) || []).map(Message.build)
         return this.messages
     }
 
     sendMessage (message: Message): void {
         this.getMessages()
-        this.messages.push(message)
+        this.messages.push(Message.build(message))
         this.postMessages()
     }
 
-    postMessages (): void {
-        console.log('Posting messages!') // eslint-disable-line
+    private postMessages (): void {
         window.localStorage.setItem(MESSAGES_STORAGE_KEY, JSON.stringify(this.messages))
     }
 

@@ -1,7 +1,9 @@
 import './message.scss'
 const template = require('./message.pug')()
 
+import Client from '../../models/Client'
 import Message from '../../models/Message'
+import ClientsService from '../../services/clientsService'
 
 export default class MessageComponent extends HTMLElement {
     public message: Message
@@ -15,9 +17,11 @@ export default class MessageComponent extends HTMLElement {
     }
 
     render (): void {
-        this.innerHTML = Object.keys(this.message)
+        const sender = ClientsService.getClientById(this.message.senderId) || {}
+        const messageRenderModel = Object.assign({}, this.message, {sender})
+        this.innerHTML = Object.keys(messageRenderModel)
             .reduce((tpl: string, key: string): string => {
-                return tpl.replace(`{{${key}}}`, this.formatMessageFieldOutput(this.message, key))
+                return tpl.replace(new RegExp(`{{\\s?${key}\\s?}}`), this.formatMessageFieldOutput(messageRenderModel, key))
             }, this.template)
     }
 
@@ -36,9 +40,10 @@ export default class MessageComponent extends HTMLElement {
 
     getFormatters (): any {
         return {
+            sender: client => (client && client.name) ? client.name : Client.defaultName,
             senderId: value => value,
             text: value => value,
-            date: value => `${value.toLocaleDateString()} ${value.toLocaleTimeString()}`
+            date: value => `${value.getHours()}:${value.getMinutes()}`
         }
     }
 
