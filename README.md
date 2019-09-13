@@ -17,6 +17,7 @@ Custom Components try-out backend-less chat between multiple browser tabs
 ## To Do 
 In progress...
 
+* [x] Replace boring polling mechanism with some subscriptions
+* [x] Grouping messages by date
 * [ ] Name changing for users
-* [ ] Grouping messages by date
 * [ ] Displaying of message "%username% is typing..."
