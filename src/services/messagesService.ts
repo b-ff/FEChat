@@ -5,11 +5,13 @@ const MESSAGES_STORAGE_KEY = 'fechat-messages'
 class MessagesService {
     public messages: Message[] = []
 
-    constructor () {}
+    constructor () {
+
+    }
 
     getMessages (): Message[] {
         console.log('Receiving messages!') // eslint-disable-line
-        this.messages = JSON.parse(window.localStorage.getItem(MESSAGES_STORAGE_KEY)) || []
+        this.messages = (JSON.parse(window.localStorage.getItem(MESSAGES_STORAGE_KEY)) || []).map(Message.build)
         return this.messages
     }
 

@@ -8,6 +8,16 @@ $inputBorderColor: #eee;
     height: 100%;
     border-top: 1px solid $borderColor;
 
+    &__date {
+        width: 100%;
+        margin: 0;
+        padding: 1rem 0;
+        font-size: .8rem;
+        font-weight: 500;
+        text-align: center;
+        color: #aaa;
+    }
+
     &__messages {
         display: flex;
         flex-direction: column;

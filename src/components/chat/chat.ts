@@ -33,32 +33,22 @@ export default class ChatComponent extends HTMLElement {
     }
 
     renderMessages (): void {
-        this.querySelector(MESSAGES_CONTAINER_CLASS).innerHTML =
-            this.messages
-                .map((message: Message): string => `<message-component message='${JSON.stringify(message)}'></message-component>`)
-                .join('')
-    }
-
-    startPolling (): void {
-        if (this.pollingTimeoutID) {
-            window.clearTimeout(this.pollingTimeoutID)
+        const renderMessagesList = (layout: string, message: Message) => {
+            return layout + `<message-component message='${JSON.stringify(message)}'></message-component>`
         }
 
-        this.messages = messagesService.getMessages()
-        this.renderMessages()
-        
-        const messagesList = this.querySelector(MESSAGES_CONTAINER_CLASS)
-        messagesList.scrollTop = messagesList.scrollHeight
-
-        this.pollingTimeoutID = window.setTimeout((): void => this.startPolling(), POLLING_INTERVAL)
+        this.querySelector(MESSAGES_CONTAINER_CLASS).innerHTML = Object.keys(this.messages).reduce((layout, localeDateString) => {
+            const renderedMessagesForDate = this.messages[localeDateString].reduce(renderMessagesList, '')
+            return layout + `<h3 class="chat__date">${localeDateString}</h3>${renderedMessagesForDate}`
+        }, '')
     }
 
     connectedCallback (): void {
         this.classList.add('chat')
         this.client = Client.build({})
+        this.loadMessages()
         this.render()
         this.addEventListeners()
-        this.startPolling()
     }
 
     disconnectedCallback (): void {
@@ -66,8 +56,34 @@ export default class ChatComponent extends HTMLElement {
         this.messages = null
     }
 
+    scrollToNewestMessages (): void {
+        const messagesList = this.querySelector(MESSAGES_CONTAINER_CLASS)
+        messagesList.scrollTop = messagesList.scrollHeight
+    }
+
     addEventListeners (): void {
         this.querySelector(MESSAGE_INPUT_CLASS).addEventListener('keydown', (e: KeyboardEvent): void => this.handleMessageKeydown(e))
+        
+        window.addEventListener('storage', () => {
+            this.loadMessages()
+            this.renderMessages()
+            this.scrollToNewestMessages()
+        })
+    }
+
+    loadMessages () {
+        const messages = messagesService.getMessages()
+
+        this.messages = messages.reduce((acc: any, message: Message): any => {
+            const localeDateString = message.date.toLocaleDateString()
+            if (!acc[localeDateString]) {
+                acc[localeDateString] = []
+            }
+
+            acc[localeDateString].push(message)
+
+            return acc
+        }, {})
     }
 
     handleMessageKeydown (event: KeyboardEvent): void {
@@ -82,7 +98,9 @@ export default class ChatComponent extends HTMLElement {
     sendMessage (messageText: string): void {
         const message = new Message(this.client.clientId, messageText, new Date())
         messagesService.sendMessage(message)
-        this.startPolling()
+        this.loadMessages()
+        this.renderMessages()
+        this.scrollToNewestMessages()
     }
 }
 

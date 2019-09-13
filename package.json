@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^12.7.5",
     "awesome-typescript-loader": "^5.0.0",
     "circular-dependency-plugin": "^5.0.2",
     "clean-webpack-plugin": "^0.1.19",
