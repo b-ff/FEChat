@@ -1,1 +1,1 @@
-console.log('load', this)
+require('./dist/main.js');
