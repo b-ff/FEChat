@@ -19,5 +19,5 @@ In progress...
 
 * [x] Replace boring polling mechanism with some subscriptions
 * [x] Grouping messages by date
-* [ ] Name changing for users
+* [x] Name changing for users
 * [ ] Displaying of message "%username% is typing..."
